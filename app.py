@@ -1,11 +1,20 @@
 import ccxt
 from flask import Flask, jsonify, request
+import json
 
 app = Flask(__name__)
 
+def open_config():
+    with open('./config.json', 'r') as f:
+        data = json.loads(f.read())
+
+    return data
+
+CONFIG = open_config()
+
 exchange = ccxt.binance({
-    'apiKey': 'YOUR_API_KEY',
-    'secret': 'YOUR_SECRET_KEY',
+    'apiKey': CONFIG['apiKey'],
+    'secret': CONFIG['secret'],
     'enableRateLimit': True,
 })
 
@@ -33,4 +42,4 @@ def sell():
     return jsonify(market_order)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(debug=true)
