@@ -21,7 +21,11 @@ exchange = ccxt.binance({
 @app.route('/get_price/<symbol>')
 def get_price(symbol):
     ticker = ccxt.binance().fetch_ticker(symbol)
-    return jsonify(ticker['last'])
+    latestPrice = {
+        'symbol': ticker['symbol'],
+        'price': ticker['last']
+    }
+    return jsonify(latestPrice)
 
 @app.route('/buy', methods=['POST'])
 def buy():
