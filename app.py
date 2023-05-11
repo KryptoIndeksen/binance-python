@@ -17,6 +17,7 @@ exchange = ccxt.binance({
     'secret': CONFIG['secret'],
     'enableRateLimit': True,
 })
+exchange.set_sandbox_mode(CONFIG['isSandbox'])
 
 @app.route('/get_price/<symbol>')
 def get_price(symbol):
