@@ -1,4 +1,5 @@
 {
+    "isLive": false,
     "apiKey": "din_api_nøkkel",
     "secret": "din_hemmelige_nøkkel"
 }
