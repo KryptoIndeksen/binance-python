@@ -11,7 +11,7 @@ def open_config():
     return data
 
 CONFIG = open_config()
-print(CONFIG)
+
 exchange = ccxt.binance({
     'apiKey': CONFIG['apiKey'],
     'secret': CONFIG['secret'],
