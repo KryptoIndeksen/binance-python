@@ -8,7 +8,15 @@ This app has endpoints to look up the price for a given trading pair and to buy/
 
 ## Installation
 
-Clone or fork this repo. Install and run this app with
+1. Clone or fork this repo. 
+2. Get configuration file. Can be copied from 
+
+> /config/example
+
+and into
+
+> /config
+3. Install and run this app with
 
 ```shell
 pip3 install requirements.txt
@@ -28,7 +36,8 @@ docker run -p 127.0.0.1:3000:5000/tcp python-binance
 
 ### Usage
 
-Look at [config.json](config/example/config.json) for examples of configurating this app. if isSandbox is set to true then the app is in test mode. Then you will look at real prices, but all buy and sell orders are not actually made. apiKey and secret can be generated at [binance testnet](https://testnet.binance.vision/).
+Look at [config.json](config/example/config.json) for an example of configurating this app. If isSandbox is set to true then the app is in test mode. Then you will look at real prices, but all buy and sell orders are not actually made. apiKey and secret can be generated at [binance testnet](https://testnet.binance.vision/).
+
 
 If it is set to false then buy/sell orders will be excecuted. keys can be generated for your user at [Binance.com](https://binance.com)
 
