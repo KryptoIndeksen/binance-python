@@ -28,7 +28,7 @@ docker run -p 127.0.0.1:3000:5000/tcp python-binance
 
 ### Usage
 
-Look at [config.json](config.json) for examples of configurating this app. if isSandbox is set to true then the app is in test mode. Then you will look at real prices, but all buy and sell orders are not actually made. apiKey and secret can be generated at [binance testnet](https://testnet.binance.vision/).
+Look at [config.json](config/example/config.json) for examples of configurating this app. if isSandbox is set to true then the app is in test mode. Then you will look at real prices, but all buy and sell orders are not actually made. apiKey and secret can be generated at [binance testnet](https://testnet.binance.vision/).
 
 If it is set to false then buy/sell orders will be excecuted. keys can be generated for your user at [Binance.com](https://binance.com)
 

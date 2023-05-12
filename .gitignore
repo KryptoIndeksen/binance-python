@@ -162,4 +162,5 @@ cython_debug/
 
 # egne ignores
 
-*.json
+config.json
+.DS_Store
