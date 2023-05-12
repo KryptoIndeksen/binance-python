@@ -1,25 +1,50 @@
 # binance-python
 
-Python app med flask og ccxt som kobler seg opp mot binance.
+Python app using flask and ccxt to connect to the binance exchange.
 
-### Funksjoner
+### Functionality
 
-Har endepunkter for å kjøpe/selge en krypto, samt hente prisen for et par.
+This app has endpoints to look up the price for a given trading pair and to buy/sell crypto with market orders.
 
-### Bruk
+## Installation
 
-Se [config.json](config.json) for eksempel på konfigurasjon. Hvis isSandbox == true så er vi i testmodus. apiKey og secret kan genereres på [binance](https://testnet.binance.vision/). Om den er false så er man live og nøkler genereres inne på din bruker på [Binance.com](https://binance.com)
-#### Bruk av endepunkter
+Clone or fork this repo. Install and run this app with
 
-Standard port som blir satt er port 5000
+```shell
+pip3 install requirements.txt
+python3 -m   flask run
+```
+
+or build a docker image with
+
+```shell
+docker build --tag python-binance .
+```
+
+and start the image with
+```shell
+docker run -p 127.0.0.1:3000:5000/tcp python-binance
+```
+
+### Usage
+
+Look at [config.json](config.json) for examples of configurating this app. if isSandbox is set to true then the app is in test mode. Then you will look at real prices, but all buy and sell orders are not actually made. apiKey and secret can be generated at [binance testnet](https://testnet.binance.vision/).
+
+If it is set to false then buy/sell orders will be excecuted. keys can be generated for your user at [Binance.com](https://binance.com)
+
+#### Usage of endpoints
+
+This app uses port 5000 and available endpoints are:
 
 > /get_price/{symbol}
 
-Returnerer prisen på et gitt par.
+which returns the price for the given symbol pair.
 
 > /buy
 
-Body må være på formen:
+Will place a market buy order on binance for a given amount and symbol pair.
+
+Body needs to be as follows:
 
 ```json
 {
@@ -30,7 +55,9 @@ Body må være på formen:
 
 > /sell
 
-Body må være på formen:
+Will place a market sell order on binance for a given amount and symbol pair.
+
+Body needs to be as follows:
 
 ```json
 {
@@ -38,5 +65,3 @@ Body må være på formen:
   amount: Float
 }
 ```
-
-Begge to vil opprette en *market* order
