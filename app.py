@@ -11,7 +11,7 @@ def open_config():
     return data
 
 CONFIG = open_config()
-
+print(CONFIG)
 exchange = ccxt.binance({
     'apiKey': CONFIG['apiKey'],
     'secret': CONFIG['secret'],
@@ -28,23 +28,23 @@ def get_price(symbol):
     }
     return jsonify(latestPrice)
 
-@app.route('/buy', methods=['POST'])
+@app.route('/buy', methods=['POST']) # amount er i base currency. for BTC/USDT er det BTC
 def buy():
     symbol = request.json['symbol']
     amount = request.json['amount']
+    
+    return place_order(symbol, amount, 'buy')
 
-    market_order = exchange.create_market_buy_order(symbol, amount)
-
-    return jsonify(market_order)
-
-@app.route('/sell', methods=['POST'])
+@app.route('/sell', methods=['POST']) # amount er i base currency. for BTC/USDT er det BTC
 def sell():
     symbol = request.json['symbol']
     amount = request.json['amount']
+    
+    return place_order(symbol, amount, 'sell')
 
-    market_order = exchange.create_market_sell_order(symbol, amount)
-
-    return jsonify(market_order)
+def place_order(symbol, amount, side):
+    order = exchange.create_order(symbol, "market", side, amount, None)
+    return jsonify(order)
 
 if __name__ == '__main__':
     app.run(debug=true)
