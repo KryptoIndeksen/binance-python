@@ -26,7 +26,7 @@ def calculate_market_cap(quote):
     if response.status_code == 200:
         responseJson = response.json()
         
-        ret = {}
+        market_cap = {}
         close = 'c'
         cirulating= 'cs'
         symbol = 's'
@@ -38,14 +38,15 @@ def calculate_market_cap(quote):
                         #if trading pair has correct quote currency, then calculate market cap for that pair
                         c = float(data[close])
                         cs = int(data[cirulating] or 0)
-                        ret[data[symbol]] = {
+                        market_cap[data[symbol]] = {
+                            'pair': market_cap[data[symbol]],
                             'symbol': data[base],
                             'close': c,
                             'inCirculation': cs,
                             'marketCap': c*cs
                         }
         
-        return sorted([value for value in ret.values()], key=lambda x:x['marketCap'], reverse=True)
+        return sorted([value for value in market_cap.values()], key=lambda x:x['marketCap'], reverse=True)
 
 
 @app.route('/price/<symbol>')
