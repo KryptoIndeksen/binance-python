@@ -1,11 +1,12 @@
 import ccxt
 from flask import Flask, jsonify, request
 import json
+import requests
 
 app = Flask(__name__)
 
 def open_config():
-    with open('./config.json', 'r') as f:
+    with open('./config/config.json', 'r') as f:
         data = json.loads(f.read())
 
     return data
@@ -18,6 +19,30 @@ exchange = ccxt.binance({
     'enableRateLimit': True,
 })
 exchange.set_sandbox_mode(CONFIG['isSandbox'])
+
+@app.route("/market_cap/<quote>")
+def calculate_market_cap(quote): 
+    response = requests.get('https://www.binance.com/exchange-api/v2/public/asset-service/product/get-products')
+    if response.status_code == 200:
+        data = response.json()
+        
+        ret = {}
+        test = {}
+        for element in data:
+            if element == "data":
+                for d in data[element]:
+                    if d["q"] == quote:
+                        c = float(d["c"])
+                        cs = int(d["cs"] or 0)
+                        ret[d["s"]] = {
+                            'symbol': d["b"],
+                            'c': c,
+                            'cs': cs,
+                            'market_cap': c*cs
+                        }
+        
+        return sorted([value for value in ret.values()], key=lambda x:x['market_cap'], reverse=True)
+
 
 @app.route('/price/<symbol>')
 def get_price(symbol):
