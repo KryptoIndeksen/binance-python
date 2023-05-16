@@ -24,43 +24,47 @@ exchange.set_sandbox_mode(CONFIG['isSandbox'])
 def calculate_market_cap(quote): 
     response = requests.get('https://www.binance.com/exchange-api/v2/public/asset-service/product/get-products')
     if response.status_code == 200:
-        data = response.json()
+        responseJson = response.json()
         
         ret = {}
-        test = {}
-        for element in data:
+        close = 'c'
+        cirulating= 'cs'
+        symbol = 's'
+        base = 'b'
+        for element in responseJson:
             if element == "data":
-                for d in data[element]:
-                    if d["q"] == quote:
-                        c = float(d["c"])
-                        cs = int(d["cs"] or 0)
-                        ret[d["s"]] = {
-                            'symbol': d["b"],
-                            'c': c,
-                            'cs': cs,
-                            'market_cap': c*cs
+                for data in responseJson[element]:#get data field in response
+                    if data["q"] == quote:
+                        #if trading pair has correct quote currency, then calculate market cap for that pair
+                        c = float(data[close])
+                        cs = int(data[cirulating] or 0)
+                        ret[data[symbol]] = {
+                            'symbol': data[base],
+                            'close': c,
+                            'inCirculation': cs,
+                            'marketCap': c*cs
                         }
         
-        return sorted([value for value in ret.values()], key=lambda x:x['market_cap'], reverse=True)
+        return sorted([value for value in ret.values()], key=lambda x:x['marketCap'], reverse=True)
 
 
 @app.route('/price/<symbol>')
 def get_price(symbol):
-    ticker = ccxt.binance().fetch_ticker(symbol)
+    ticker = exchange.fetch_ticker(symbol)
     latestPrice = {
         'symbol': ticker['symbol'],
         'price': ticker['last']
     }
     return jsonify(latestPrice)
 
-@app.route('/buy', methods=['POST']) # amount er i base currency. for BTC/USDT er det BTC
+@app.route('/buy', methods=['POST']) # amount is base currency. for BTC/USDT that is BTC
 def buy():
     symbol = request.json['symbol']
     amount = request.json['amount']
     
     return place_order(symbol, amount, 'buy')
 
-@app.route('/sell', methods=['POST']) # amount er i base currency. for BTC/USDT er det BTC
+@app.route('/sell', methods=['POST']) # amount is base currency. For BTC/USDT that is BTC
 def sell():
     symbol = request.json['symbol']
     amount = request.json['amount']
