@@ -19,7 +19,7 @@ exchange = ccxt.binance({
 })
 exchange.set_sandbox_mode(CONFIG['isSandbox'])
 
-@app.route('/get_price/<symbol>')
+@app.route('/price/<symbol>')
 def get_price(symbol):
     ticker = ccxt.binance().fetch_ticker(symbol)
     latestPrice = {
