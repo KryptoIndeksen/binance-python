@@ -19,6 +19,7 @@ exchange = ccxt.binance({
     'enableRateLimit': True,
 })
 exchange.set_sandbox_mode(CONFIG['isSandbox'])
+exchange.load_markets()
 
 @app.route("/market_cap/<quote>")
 def calculate_market_cap(quote): 
@@ -57,6 +58,12 @@ def get_price(symbol):
         'price': ticker['last']
     }
     return jsonify(latestPrice)
+
+@app.route('/market/<symbol>')
+def get_market(symbol):
+    market = exchange.market(symbol)
+    
+    return jsonify(market['limits'])
 
 @app.route('/buy', methods=['POST']) # amount is base currency. for BTC/USDT that is BTC
 def buy():
