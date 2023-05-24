@@ -40,7 +40,7 @@ def calculate_market_cap(quote):
                         c = float(data[close])
                         cs = int(data[cirulating] or 0)
                         market_cap[data[symbol]] = {
-                            'pair': market_cap[data[symbol]],
+                            'pair': data[symbol],
                             'symbol': data[base],
                             'close': c,
                             'inCirculation': cs,
