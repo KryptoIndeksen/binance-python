@@ -12,6 +12,7 @@ def open_config():
     return data
 
 CONFIG = open_config()
+CURRENCIES_TO_EXCLUDE = ['USDC']
 
 exchange = ccxt.binance({
     'apiKey': CONFIG['apiKey'],
@@ -36,17 +37,17 @@ def calculate_market_cap(quote):
             if element == "data":
                 for data in responseJson[element]:#get data field in response
                     if data["q"] == quote:
-                        #if trading pair has correct quote currency, then calculate market cap for that pair
-                        c = float(data[close])
-                        cs = int(data[cirulating] or 0)
-                        market_cap[data[symbol]] = {
-                            'pair': data[symbol],
-                            'symbol': data[base],
-                            'close': c,
-                            'inCirculation': cs,
-                            'marketCap': c*cs
-                        }
-        
+                        if data['b'] not in CURRENCIES_TO_EXCLUDE:
+                            #if trading pair has correct quote currency, then calculate market cap for that pair
+                            c = float(data[close])
+                            cs = int(data[cirulating] or 0)
+                            market_cap[data[symbol]] = {
+                                'pair': data[symbol],
+                                'symbol': data[base],
+                                'close': c,
+                                'inCirculation': cs,
+                                'marketCap': c*cs
+                            }
         return sorted([value for value in market_cap.values()], key=lambda x:x['marketCap'], reverse=True)
 
 
@@ -84,4 +85,4 @@ def place_order(symbol, amount, side):
     return jsonify(order)
 
 if __name__ == '__main__':
-    app.run(debug=true)
+    app.run(debug=True)
